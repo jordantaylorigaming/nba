@@ -1,0 +1,9 @@
+streamlit
+pandas
+nba-api
+eventregistry
+openai>=1.0.0,<2.0.0
+paramiko
+python-dotenv
+google-genai
+Pillow
