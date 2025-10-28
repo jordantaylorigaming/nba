@@ -248,7 +248,7 @@ Write a comprehensive article (4-6 paragraphs) that:
 5. Mentions the other games that were played that day and weren't mentioned before
 6. Ends with a brief conclusion
 
-Title the article appropriately. Make it engaging and professional.
+IMPORTANT: The article title MUST include the date {date_str} in the title. Format it as part of an engaging and professional title (e.g., "NBA Recap {date_str}: Title Text" or similar format).
 
 Article:"""
     
