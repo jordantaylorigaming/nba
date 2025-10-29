@@ -212,7 +212,7 @@ def main():
                             title=title,
                             article_content=content,
                             sftp_config=SFTP_CONFIG,
-                            author="AI Sports Writer",
+                            author="Jordan Taylor",
                             base_url="/home/dh_dncxkw/nb.casinoxtra.com",
                             remote_path="/blog",
                             verbose=False,
