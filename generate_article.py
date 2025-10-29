@@ -226,6 +226,8 @@ Write a 2-3 paragraph summary of this game that includes:
 3. Any notable storylines or context
 
 Keep it professional, engaging, and factual. Do not make up information not present in the articles.
+IMPORTANT: the current season is 2025-2026. This is relevant because some players may not be rookies anymore or some players may have changed teams.
+NEVER assume anything that is not present in the articles.
 
 Summary:"""
     
@@ -248,7 +250,11 @@ Write a comprehensive article (4-6 paragraphs) that:
 5. Mentions the other games that were played that day and weren't mentioned before
 6. Ends with a brief conclusion
 
-IMPORTANT: The article title MUST include the date {date_str} in the title. Format it as part of an engaging and professional title (e.g., "NBA Recap {date_str}: Title Text" or similar format).
+IMPORTANT: The article title MUST include the date {date_str} in the title. 
+Format it as part of an engaging and professional title (e.g., "NBA Recap {date_str}: Title Text" or similar format).
+
+IMPORTANT: the current season is 2025-2026. This is relevant because some players may not be rookies anymore or some players may have changed teams.
+NEVER assume anything that is not present in the articles.
 
 Article:"""
     
