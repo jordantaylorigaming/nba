@@ -48,6 +48,8 @@ if 'games_data' not in st.session_state:
     st.session_state.games_data = None
 if 'generated_image_path' not in st.session_state:
     st.session_state.generated_image_path = None
+if 'image_prompt' not in st.session_state:
+    st.session_state.image_prompt = None
 
 def main():
     st.title("🏀 NBA Article Generator")
@@ -157,6 +159,9 @@ def main():
                                 OPENAI_API_KEY
                             )
                             
+                            # Store the prompt in session state
+                            st.session_state.image_prompt = image_prompt
+                            
                             # Generate image
                             slug = create_slug(title)
                             image_path = generate_image(
@@ -193,8 +198,8 @@ def main():
             st.info(f"Article ready for: {st.session_state.generated_date}")
             
             # Regenerate Image button
-            if GOOGLE_API_KEY and st.button("🔄 Regenerate Image", use_container_width=True):
-                with st.spinner("Generating new image..."):
+            if GOOGLE_API_KEY and st.button("🔄 Regenerate Image & Prompt", use_container_width=True):
+                with st.spinner("Generating new prompt and image..."):
                     try:
                         # Extract title and content
                         article_lines = st.session_state.generated_article.strip().split('\n')
@@ -202,13 +207,23 @@ def main():
                         content = '\n'.join(article_lines[1:]) if len(article_lines) > 1 else st.session_state.generated_article
                         
                         # Generate new image prompt
+                        st.info("🤖 Generating new image prompt...")
                         image_prompt = generate_image_prompt_from_article(
                             title, 
                             content, 
                             OPENAI_API_KEY
                         )
                         
+                        # Store the prompt in session state
+                        st.session_state.image_prompt = image_prompt
+                        
+                        # Show the generated prompt
+                        st.success("✅ New prompt generated!")
+                        with st.expander("View Generated Prompt", expanded=True):
+                            st.text_area("Image Prompt", image_prompt, height=150, disabled=True)
+                        
                         # Generate new image
+                        st.info("🎨 Generating image from prompt...")
                         slug = create_slug(title)
                         image_path = generate_image(
                             image_prompt, 
@@ -284,6 +299,12 @@ def main():
         if st.session_state.generated_image_path and os.path.exists(st.session_state.generated_image_path):
             st.subheader("🎨 Generated Image")
             st.image(st.session_state.generated_image_path, caption="Article Header Image", use_container_width=True)
+            
+            # Display the image prompt if available
+            if st.session_state.image_prompt:
+                with st.expander("View Image Prompt", expanded=False):
+                    st.text_area("Prompt used to generate this image:", st.session_state.image_prompt, height=120, disabled=True)
+            
             st.markdown("---")
         
         # Display article with expander for full view
