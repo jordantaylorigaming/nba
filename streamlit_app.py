@@ -192,6 +192,42 @@ def main():
         if st.session_state.generated_article:
             st.info(f"Article ready for: {st.session_state.generated_date}")
             
+            # Regenerate Image button
+            if GOOGLE_API_KEY and st.button("🔄 Regenerate Image", use_container_width=True):
+                with st.spinner("Generating new image..."):
+                    try:
+                        # Extract title and content
+                        article_lines = st.session_state.generated_article.strip().split('\n')
+                        title = article_lines[0] if article_lines else f"NBA Daily Recap - {st.session_state.generated_date}"
+                        content = '\n'.join(article_lines[1:]) if len(article_lines) > 1 else st.session_state.generated_article
+                        
+                        # Generate new image prompt
+                        image_prompt = generate_image_prompt_from_article(
+                            title, 
+                            content, 
+                            OPENAI_API_KEY
+                        )
+                        
+                        # Generate new image
+                        slug = create_slug(title)
+                        image_path = generate_image(
+                            image_prompt, 
+                            GOOGLE_API_KEY, 
+                            slug
+                        )
+                        
+                        if image_path and os.path.exists(image_path):
+                            st.session_state.generated_image_path = image_path
+                            st.success("✅ New image generated!")
+                            st.rerun()
+                        else:
+                            st.error("❌ Image generation failed")
+                            
+                    except Exception as img_error:
+                        st.error(f"❌ Error: {str(img_error)}")
+            
+            st.markdown("---")
+            
             if st.button("📤 Upload to SFTP", type="primary", use_container_width=True):
                 if not SFTP_CONFIG.get("password"):
                     st.error("SFTP password not configured")
