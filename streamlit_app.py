@@ -304,13 +304,10 @@ def main():
             # Check if file actually exists
             if os.path.exists(st.session_state.generated_image_path):
                 st.subheader("🎨 Generated Image")
-                # Add a unique key to force image refresh
-                import time
-                cache_buster = int(time.time())
+                # Display image with filename in caption to show which version
                 st.image(st.session_state.generated_image_path, 
-                        caption=f"Article Header Image (Generated: {os.path.basename(st.session_state.generated_image_path)})", 
-                        use_container_width=True,
-                        key=f"image_{cache_buster}")
+                        caption=f"Article Header Image ({os.path.basename(st.session_state.generated_image_path)})", 
+                        use_container_width=True)
                 
                 # Display the image prompt if available
                 if st.session_state.image_prompt:
