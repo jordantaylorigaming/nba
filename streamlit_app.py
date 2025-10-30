@@ -222,18 +222,22 @@ def main():
                         with st.expander("View Generated Prompt", expanded=True):
                             st.text_area("Image Prompt", image_prompt, height=150, disabled=True)
                         
-                        # Generate new image
+                        # Generate new image with timestamp to ensure unique filename
                         st.info("🎨 Generating image from prompt...")
                         slug = create_slug(title)
+                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                        unique_slug = f"{slug}_{timestamp}"
+                        
                         image_path = generate_image(
                             image_prompt, 
                             GOOGLE_API_KEY, 
-                            slug
+                            unique_slug
                         )
                         
                         if image_path and os.path.exists(image_path):
                             st.session_state.generated_image_path = image_path
                             st.success("✅ New image generated!")
+                            # Force page refresh to show new image
                             st.rerun()
                         else:
                             st.error("❌ Image generation failed")
@@ -296,16 +300,26 @@ def main():
         st.header("📄 Generated Article")
         
         # Display generated image if available
-        if st.session_state.generated_image_path and os.path.exists(st.session_state.generated_image_path):
-            st.subheader("🎨 Generated Image")
-            st.image(st.session_state.generated_image_path, caption="Article Header Image", use_container_width=True)
-            
-            # Display the image prompt if available
-            if st.session_state.image_prompt:
-                with st.expander("View Image Prompt", expanded=False):
-                    st.text_area("Prompt used to generate this image:", st.session_state.image_prompt, height=120, disabled=True)
-            
-            st.markdown("---")
+        if st.session_state.generated_image_path:
+            # Check if file actually exists
+            if os.path.exists(st.session_state.generated_image_path):
+                st.subheader("🎨 Generated Image")
+                # Add a unique key to force image refresh
+                import time
+                cache_buster = int(time.time())
+                st.image(st.session_state.generated_image_path, 
+                        caption=f"Article Header Image (Generated: {os.path.basename(st.session_state.generated_image_path)})", 
+                        use_container_width=True,
+                        key=f"image_{cache_buster}")
+                
+                # Display the image prompt if available
+                if st.session_state.image_prompt:
+                    with st.expander("View Image Prompt", expanded=False):
+                        st.text_area("Prompt used to generate this image:", st.session_state.image_prompt, height=120, disabled=True)
+                
+                st.markdown("---")
+            else:
+                st.warning(f"⚠️ Image file not found: {st.session_state.generated_image_path}")
         
         # Display article with expander for full view
         with st.expander("View Full Article", expanded=True):
